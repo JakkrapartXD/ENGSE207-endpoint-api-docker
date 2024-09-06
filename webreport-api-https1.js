@@ -17,7 +17,7 @@ var url = require('url');
 //---------------- Websocket -----------------------------
 
 var webSocketServer = new (require('ws')).Server({
-    port: (process.env.PORT || 3071)
+    port: (process.env.PORT || 8400)
 }),
     clientWebSockets = {} // userID: webSocket
 CLIENTS = [];
