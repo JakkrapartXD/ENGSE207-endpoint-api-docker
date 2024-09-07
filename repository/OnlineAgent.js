@@ -1,21 +1,21 @@
 const sql = require('mssql');
-//const sqlConfig = require('../sqlConfig')['development'];
-let sqlConfig;
-if (process.env.NODE_ENV === 'development') {
-    sqlConfig = require('../sqlConfig')['development'];
-}
-if (process.env.NODE_ENV === 'production') {
-    sqlConfig = require('../sqlConfig')['production'];
-}
+const sqlConfig = require('../sqlConfig')['development'];
+
 const { v4: uuid } = require('uuid');
+
 console.log("sqlConfig: ", sqlConfig);
+
 async function getOnlineAgentByAgentCode(agentcode) {
+
     try {
         console.log("agentcode: ", agentcode);
+
         let pool = await sql.connect(sqlConfig);
         let result = await pool.request().query(`SELECT * FROM [OnlineAgents] WHERE [agent_code] = '${agentcode}'`); //@agentcode
         //let result = await pool.request().query(`SELECT * FROM [OnlineAgents] WHERE [agent_code] LIKE '99%'`); //@agentcode
+
         console.log("result: ", result);
+
         if (!result || result.recordsets[0].length === 0) {
             console.log("result: ERROR");
             return ({
@@ -23,23 +23,28 @@ async function getOnlineAgentByAgentCode(agentcode) {
                 statusCode: 404,
                 errMessage: 'Agent not found',
             });
+
         } else {
+
             return ({
                 error: false,
                 statusCode: 200,
                 data: result.recordset[0]
             });
+
         }
+
     }
     catch (error) {
         console.log(error);
         return ({
-            error: true,
-            statusCode: 500,
-            errMessage: 'An internal server error occurred',
-        });
+             error: true,
+             statusCode: 500,
+             errMessage: 'An internal server error occurred',
+         });
     }
 }
+
 async function postOnlineAgentStatus(AgentCode, AgentName, IsLogin, AgentStatus) {
     console.log("----------------");
     console.log("AgentCode: " + AgentCode);
@@ -89,7 +94,6 @@ async function postOnlineAgentStatus(AgentCode, AgentName, IsLogin, AgentStatus)
     }
 
 }
-
 
 async function postOnlineAgentStatusByTeam(AgentCode, AgentName, Team, IsLogin, AgentStatus) {
 
@@ -158,27 +162,35 @@ async function postOnlineAgentStatusByTeam(AgentCode, AgentName, Team, IsLogin, 
     }
 
 }
-
 async function deleteOnlineAgent(AgentCode) {
 
     try {
+
         let result = await pool.request().query(`SELECT * FROM [OnlineAgents] WHERE [agent_code] = '${agentcode}'`); //@agentcode
+
         if (!result || result.recordsets[0].length === 0) {
+
             return ({
                 error: true,
                 errMessage: 'No agent online to delete !!',
             });
+
         } else {
+
             return ({
                 error: false,
                 Message: 'Agent online was deleted !!',
             });
         }
+
+
     } catch (error) {
         console.log(error);
         //callBack(error);
     }
+
 }
+
 module.exports.OnlineAgentRepo = {
 
     getOnlineAgentByAgentCode: getOnlineAgentByAgentCode,
