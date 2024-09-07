@@ -45,11 +45,12 @@ async function getOnlineAgentByAgentCode(agentcode) {
     }
 }
 
-async function postOnlineAgentStatus(AgentCode, AgentName, IsLogin, AgentStatus) {
+async function postOnlineAgentStatusByTeam(AgentCode, AgentName, Team, IsLogin, AgentStatus) {
 
     console.log("----------------");
     console.log("AgentCode: " + AgentCode);
     console.log("AgentName: " + AgentName);
+    console.log("Team: " + Team);
     console.log("IsLogin: " + IsLogin);
     console.log("AgentStatus: " + AgentStatus);
 
@@ -76,6 +77,8 @@ async function postOnlineAgentStatus(AgentCode, AgentName, IsLogin, AgentStatus)
             let result2 = await pool.request().query("INSERT INTO [OnlineAgents] (agent_code, agent_id, AgentName, IsLogin, AgentStatus, uuid) OUTPUT inserted.agent_code, inserted.uuid, inserted.StartOnline VALUES ('" + AgentCode + "'," + agentid + ",'" + AgentName + "','" + IsLogin + "','" + AgentStatus + "','" + uniqueId + "');");
             console.dir(result2.recordset[0]);
 
+            postOnlineAgentListByTeam(AgentCode, AgentName, Team, AgentStatus, 5, IsLogin);
+
             return ({
                 error: false,
                 statusCode: 200,
@@ -88,6 +91,8 @@ async function postOnlineAgentStatus(AgentCode, AgentName, IsLogin, AgentStatus)
             let result2 = await pool.request().query("UPDATE [OnlineAgents] SET [AgentName] = '" + AgentName + "', [IsLogin] = '" + IsLogin + "', [AgentStatus] = '" + AgentStatus + "'  WHERE [agent_code] = '" + AgentCode + "'; ");
             console.dir(result2);
 
+            postOnlineAgentListByTeam(AgentCode, AgentName, Team, AgentStatus, 5, IsLogin);
+
             return ({
                 error: false,
                 statusCode: 200,
@@ -95,6 +100,7 @@ async function postOnlineAgentStatus(AgentCode, AgentName, IsLogin, AgentStatus)
             });
 
         }
+
 
     } catch (error) {
         console.log(error);
@@ -106,7 +112,6 @@ async function postOnlineAgentStatus(AgentCode, AgentName, IsLogin, AgentStatus)
     }
 
 }
-
 async function deleteOnlineAgent(AgentCode) {
 
     try {
@@ -139,6 +144,6 @@ async function deleteOnlineAgent(AgentCode) {
 module.exports.OnlineAgentRepo = {
 
     getOnlineAgentByAgentCode: getOnlineAgentByAgentCode,
-    postOnlineAgentStatus: postOnlineAgentStatus,
+    postOnlineAgentStatusByTeam: postOnlineAgentStatusByTeam,
     deleteOnlineAgent: deleteOnlineAgent
 }
