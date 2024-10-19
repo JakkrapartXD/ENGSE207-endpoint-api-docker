@@ -8,3 +8,6 @@ node_modules
 
 # production
 /build
+
+server.crt
+server.key
