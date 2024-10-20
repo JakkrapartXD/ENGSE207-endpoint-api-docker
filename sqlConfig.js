@@ -15,7 +15,7 @@ var dbconfig = {
         }
     },
     production: {
-        server: '10.21.43.203',
+        server: 'mssql',
         database:'team4_web_labDB',
         user:'sa',
         password:'P@ssw0rd',
@@ -26,7 +26,7 @@ var dbconfig = {
             enableArithAbort: true,
             trustServerCertificate: true,
             trustedconnection:  true,
-            instancename:  '10.21.43.203'  // SQL Server instance name
+            instancename:  'mssql'  // SQL Server instance name
         }
     },
 
